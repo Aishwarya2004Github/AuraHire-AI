@@ -14,14 +14,4 @@
 * **Database:** SQLite / MySQL
 * **Frontend:** HTML5, CSS3 (Glassmorphism), JavaScript
 
-## 🚀 Getting Started
 
-### Prerequisites
-* Python 3.x
-* pip (Python package manager)
-
-### Installation
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/username/AuraHire-AI.git](https://github.com/username/AuraHire-AI.git)
-   cd AuraHire-AI
