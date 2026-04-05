@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraHire AI | Master Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+ /* --- ULTIMATE CLEAN NAVBAR --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%; /* Space from sides */
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Logo Styling - Removed Boxy Background */
+.nav-left .logo { 
+    font-size: 24px; 
+    font-weight: 800; 
+    color: white; 
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.nav-left .logo span { 
+    color: #00f2fe; /* Cyan/Primary color */
+}
+
+/* Right side menu */
+.nav-right { 
+    display: flex; 
+    gap: 20px; 
+    align-items: center; 
+}
+
+/* User Profile Badge */
+.nav-user {
+    background: rgba(0, 242, 254, 0.08);
+    color: #00f2fe;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.nav-user i { font-size: 16px; }
+
+/* History Link */
+.nav-link { 
+    color: rgba(255, 255, 255, 0.7); 
+    text-decoration: none; 
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #00f2fe;
+}
+
+.nav-link i {
+    font-size: 16px;
+}
+
+/* Mobile: Hide text, show only icons if screen is small */
+@media (max-width: 768px) {
+    .nav-link span { display: none; }
+    .nav-right { gap: 15px; }
+}
+
+/* Logout Button - Minimalist */
+.btn-logout { 
+    background: rgba(255, 77, 77, 0.1); 
+    color: #ff4d4d; 
+    padding: 8px 20px; 
+    border-radius: 12px; 
+    text-decoration: none; 
+    font-weight: 700;
+    font-size: 14px;
+    border: 1px solid rgba(255, 77, 77, 0.2);
+    transition: 0.3s;
+}
+
+.btn-logout:hover { 
+    background: #ff4d4d; 
+    color: white; 
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+}
+/* --- LABELS SPACING FIX --- */
+.input-box label {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Icon aur text ke beech space */
+    margin-bottom: 18px !important; /* Label aur box ke beech space */
+    font-weight: 700;
+    color: #00f2fe; /* Cyan/Primary color */
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Heading aur Grid ke beech space */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 35px; /* Left aur Right box ke beech gap */
+    margin-top: 25px; /* Navbar ke baad thoda gap */
+    margin-bottom: 30px;
+}
+
+/* Textarea aur Upload box ko thoda padding dena */
+textarea, .file-upload-wrapper {
+    margin-top: 5px; /* Extra safety margin */
+    border-radius: 20px;
+}
+
+/* Responsive fix */
+@media (max-width: 900px) {
+    .analysis-grid {
+        gap: 40px; /* Mobile par vertical spacing badhane ke liye */
+    }
+}
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .navbar { padding: 15px 5%; }
+    .nav-link span { display: none; } /* Show only icons on mobile */
+}
+    /* --- DASHBOARD CARD --- */
+    .dashboard-card { 
+        max-width: 1150px; 
+        margin: 40px auto; 
+        background: var(--glass); 
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        padding: 40px; 
+        border-radius: 32px; 
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
+        animation: floatUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes floatUp { 
+        from { opacity: 0; transform: translateY(30px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    .analysis-grid { 
+        display: grid; 
+        grid-template-columns: 1.2fr 0.8fr; 
+        gap: 30px; 
+        margin-bottom: 40px; 
+    }
+
+    .input-box label { 
+        display: block; 
+        margin-bottom: 12px; 
+        font-weight: 700; 
+        color: var(--primary); 
+        font-size: 12px; 
+        text-transform: uppercase; 
+        letter-spacing: 1.5px;
+    }
+
+    textarea { 
+        width: 100%; 
+        padding: 20px; 
+        background: rgba(0, 0, 0, 0.2); 
+        border: 1px solid var(--glass-border); 
+        border-radius: 20px; 
+        color: white; 
+        font-size: 15px;
+        line-height: 1.6;
+        transition: 0.3s; 
+        resize: none;
+    }
+
+    textarea:focus { 
+        border-color: var(--primary); 
+        outline: none; 
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 25px rgba(0, 242, 254, 0.1); 
+    }
+
+    /* --- MODERN FILE UPLOAD --- */
+    .file-upload-wrapper { 
+        border: 2px dashed rgba(79, 172, 254, 0.3); 
+        padding: 40px; 
+        text-align: center; 
+        border-radius: 20px; 
+        cursor: pointer; 
+        background: rgba(79, 172, 254, 0.03); 
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+    }
+    .file-upload-wrapper:hover { 
+        background: rgba(79, 172, 254, 0.08); 
+        border-color: var(--primary);
+        transform: scale(1.02);
+    }
+    .file-upload-wrapper i { font-size: 50px; color: var(--primary); }
+
+    .btn-analyze { 
+        width: 100%; 
+        background: linear-gradient(90deg, var(--secondary), var(--primary)); 
+        color: #0f172a; 
+        padding: 20px; 
+        border: none; 
+        border-radius: 16px; 
+        font-size: 18px; 
+        font-weight: 800; 
+        cursor: pointer; 
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-transform: uppercase; 
+        letter-spacing: 2px;
+        box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
+    }
+    .btn-analyze:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 20px 40px rgba(0, 242, 254, 0.5); 
+    }
+
+    /* --- METER & AI SECTION --- */
+    .meter-container { 
+        position: relative; 
+        width: 160px; 
+        height: 160px; 
+        margin: 0 auto 20px; 
+    }
+    .meter-text { 
+        position: absolute; 
+        top: 50%; left: 50%; 
+        transform: translate(-50%, -50%); 
+        font-size: 32px; 
+        font-weight: 800; 
+        background: linear-gradient(to bottom, #fff, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .ai-section { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 30px; 
+        margin-top: 50px; 
+        padding-top: 40px;
+        border-top: 1px solid var(--glass-border);
+    }
+    .ai-box { 
+        background: rgba(255, 255, 255, 0.02); 
+        padding: 30px; 
+        border-radius: 24px; 
+        border: 1px solid var(--glass-border); 
+    }
+    .ai-box h3 {
+        font-size: 16px;
+        color: var(--primary);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .tag { 
+        display: inline-block; 
+        background: rgba(0, 255, 136, 0.05); 
+        color: var(--accent); 
+        padding: 10px 18px; 
+        border-radius: 12px; 
+        font-size: 13px; 
+        margin: 6px; 
+        font-weight: 600;
+        border: 1px solid rgba(0,255,136,0.1); 
+        transition: 0.3s;
+    }
+    .tag:hover { background: rgba(0, 255, 136, 0.15); transform: translateY(-3px); }
+
+    #questions-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-height: 400px; 
+        overflow-y: auto;
+        padding-right: 15px;
+    }
+    .question-item { 
+        background: rgba(255,255,255,0.02); 
+        padding: 20px; 
+        border-radius: 16px; 
+        border-left: 5px solid var(--primary); 
+        font-size: 14px; 
+        line-height: 1.6;
+        transition: 0.3s;
+    }
+    .question-item:hover { background: rgba(255,255,255,0.05); transform: translateX(8px); }
+
+    /* Custom Scrollbar */
+    #questions-container::-webkit-scrollbar { width: 4px; }
+    #questions-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+    .hidden { display: none !important; }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 900px) {
+        .analysis-grid, .ai-section { grid-template-columns: 1fr; }
+        .dashboard-card { margin: 20px; padding: 25px; }
+    }
+/* Container jo button ko center karega */
+.download-container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    margin-top: 40px;       /* Box khatam hone ke baad gap */
+    padding-bottom: 20px;
+    clear: both;            /* Kisi bhi float ko break karne ke liye */
+}
+
+.btn-download {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-download:hover {
+    background: #00ff88;
+    color: #0f172a;
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+    transform: translateY(-3px);
+}
+
+/* Agar mobile par button width full chahiye */
+@media (max-width: 600px) {
+    .btn-download {
+        width: 100%;
+        justify-content: center;
+    }
+}    
+</style>
+</head>
+<body>
+
+<div class="dashboard-card">
+    <nav class="navbar">
+    <div class="nav-left">
+        <a href="/dashboard" class="logo">Aura<span>Hire AI</span></a>
+    </div>
+    <div class="nav-right">
+        <a href="/profile" class="nav-user">
+            <i class="fa-solid fa-circle-user"></i>
+            {{ session['user'] }}
+        </a>
+        
+        <a href="/history" class="nav-link">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>History</span>
+        </a>
+        <a href="/insights" class="nav-link" id="nav-insights">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AI Insights</span>
+        </a>
+        <a href="/logout" class="btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+</nav>
+
+    <form id="ai-form">
+        <div class="analysis-grid">
+            <div class="input-box">
+                <label><i class="fa-solid fa-terminal"></i> Job Description (Target Context)</label>
+                <textarea name="jd" placeholder="Paste target job requirements here..." required></textarea>
+            </div>
+
+            <div class="input-box">
+                <label><i class="fa-solid fa-file-pdf"></i> Resume Data Source</label>
+                <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click();">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 30px; color: var(--primary);"></i>
+                    <p id="file-name-display" style="margin-top:10px; font-size: 14px;">Upload PDF for AI Processing</p>
+                    <input type="file" id="file-input" name="resume_pdf" accept=".pdf" style="display: none;" onchange="updateFileName(this)" required>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label><i class="fa-brands fa-github"></i> GitHub Identity</label>
+                    <input type="text" name="github_user" id="github_user" placeholder="e.g. ranarohan" class="form-control">
+                    <p style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Input username only for repository indexing.</p>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-analyze" id="submit-btn">
+            <i class="fa-solid fa-bolt"></i> Run AI Analysis
+        </button>
+    </form>
+
+    <div id="results-wrapper" class="hidden">
+        <div class="results-container" style="margin-top: 50px;">
+            <div class="score-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                
+                <div class="stat-card" style="text-align: center;">
+                    <div class="meter-container">
+                        <svg class="circle-svg" width="150" height="150">
+                            <circle class="circle-bg" cx="75" cy="75" r="70"></circle>
+                            <circle class="circle-progress" id="ats-circle" cx="75" cy="75" r="70"></circle>
+                        </svg>
+                        <div class="meter-text" id="ats-text">0%</div>
+                    </div>
+                    <p style="font-size: 12px; letter-spacing: 1px;">MATCH SCORE</p>
+                </div>
+
+                <div class="stat-card" style="text-align: center;">
+                    <div class="meter-container">
+                        <svg class="circle-svg" width="150" height="150">
+                            <circle class="circle-bg" cx="75" cy="75" r="70"></circle>
+                            <circle class="circle-progress" id="conf-circle" style="stroke: var(--accent);" cx="75" cy="75" r="70"></circle>
+                        </svg>
+                        <div class="meter-text" id="conf-text">0%</div>
+                    </div>
+                    <p style="font-size: 12px; letter-spacing: 1px;">AI CONFIDENCE</p>
+                </div>
+
+                <div class="stat-card" style="text-align: center;">
+                    <div class="meter-container">
+                        <svg class="circle-svg" width="150" height="150">
+                            <circle class="circle-bg" cx="75" cy="75" r="70"></circle>
+                            <circle class="circle-progress" id="git-circle" style="stroke: #ff0077;" cx="75" cy="75" r="70"></circle>
+                        </svg>
+                        <div class="meter-text" id="git-text">0%</div>
+                    </div>
+                    <p style="font-size: 12px; letter-spacing: 1px;">PORTFOLIO RANK</p>
+                </div>
+            </div>
+
+            <div class="ai-section">
+                <div class="ai-box">
+                    <h4 style="color: var(--accent);"><i class="fa-solid fa-microchip"></i> Detected Entities</h4>
+                    <div id="tags-container" class="tags-container"></div>
+                </div>
+
+                <div class="ai-box">
+                    <h4 style="color: var(--primary);"><i class="fa-solid fa-robot"></i> Generated Prep</h4>
+                    <div id="questions-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="word-analysis">
+    <div class="ai-box">
+        <h4><i class="fa-solid fa-check-circle" style="color:#00ff88"></i> Matched Keywords</h4>
+        <div id="skills-list" class="tag-cloud"></div>
+    </div>
+    <div class="ai-box">
+        <h4><i class="fa-solid fa-circle-xmark" style="color:#ff4d4d"></i> Missing in Resume</h4>
+        <div id="unmatched-list" class="tag-cloud"></div>
+    </div>
+</div>
+    <div id="flash-message" style="color:#ff4d4d; text-align:center; margin-top:20px; font-size: 14px;"></div>
+   <div class="download-container" id="download-btn-wrapper">
+    <form action="/download_report" method="POST">
+        <input type="hidden" name="score" id="pdf-score-input">
+        <input type="hidden" name="detected_skills" id="pdf-detected-input"> 
+        <input type="hidden" name="matching_skills" id="pdf-matched-input">
+        <input type="hidden" name="missing_skills" id="pdf-missing-input">
+        
+        <button type="submit" class="btn-download">
+            <i class="fa-solid fa-file-pdf"></i> DOWNLOAD ANALYSIS REPORT
+        </button>
+    </form>
+</div>
+</div>
+
+<script>
+    function updateFileName(input) {
+        const display = document.getElementById('file-name-display');
+        if (input.files && input.files[0]) {
+            display.innerText = "Target: " + input.files[0].name;
+            display.style.color = "#00f2fe";
+        }
+    }
+    // Function to get color based on percentage
+
+    // 1. Color helper function (Top level)
+    function getColor(percent) {
+        let val = parseFloat(percent);
+        if (val >= 80) return "#00ff88"; // Neon Green
+        if (val >= 60) return "#00d4ff"; // Blue
+        return "#ff4d4d";                // Red
+    }
+
+    // 2. Progress helper function (Top level)
+    function setProgress(id, percent) {
+        const circle = document.getElementById(id);
+        if(!circle) return;
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const numPercent = parseFloat(percent);
+        const offset = circumference - (numPercent / 100 * circumference);
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = offset;
+    }
+
+    function updateFileName(input) {
+        const display = document.getElementById('file-name-display');
+        if (input.files && input.files[0]) {
+            display.innerText = "Target: " + input.files[0].name;
+            display.style.color = "#00f2fe";
+        }
+    }
+
+    const aiForm = document.getElementById('ai-form');
+    aiForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        const resultsWrapper = document.getElementById('results-wrapper');
+        const flash = document.getElementById('flash-message');
+        
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Neural Analysis...';
+        
+        const formData = new FormData(aiForm);
+        
+        try {
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                resultsWrapper.classList.remove('hidden');
+                
+                // Inputs for PDF generation
+                document.getElementById('pdf-score-input').value = data.score;
+                document.getElementById('pdf-matched-input').value = data.matched.join(', ');
+                document.getElementById('pdf-missing-input').value = data.unmatched.join(', ');
+                document.getElementById('pdf-detected-input').value = data.detected.join(', ');
+
+                // --- DYNAMIC UPDATES START ---
+                
+                // 1. Text & Color Updates
+                const atsText = document.getElementById('ats-text');
+                const confText = document.getElementById('conf-text');
+                const gitText = document.getElementById('git-text');
+
+                atsText.innerText = `${data.score}%`;
+                confText.innerText = `${data.confidence}%`;
+                gitText.innerText = `${data.github.portfolio_score}%`;
+
+                // Set Text Colors based on Score
+                atsText.style.color = getColor(data.score);
+                confText.style.color = getColor(data.confidence);
+                gitText.style.color = getColor(data.github.portfolio_score);
+
+                // 2. Animate Circular Progress & Stroke Color
+                setTimeout(() => {
+                    setProgress('ats-circle', data.score);
+                    setProgress('conf-circle', data.confidence);
+                    setProgress('git-circle', data.github.portfolio_score);
+
+                    // Update Circle Colors
+                    document.getElementById('ats-circle').style.stroke = getColor(data.score);
+                    document.getElementById('conf-circle').style.stroke = getColor(data.confidence);
+                    document.getElementById('git-circle').style.stroke = getColor(data.github.portfolio_score);
+                }, 100);
+
+                // 3. Keywords & Questions
+                document.getElementById('tags-container').innerHTML = data.detected.map(s => `<span class="tag">${s}</span>`).join('');
+                document.getElementById('skills-list').innerHTML = data.matched.map(s => `<span class="tag">${s}</span>`).join('') || "No Matches";
+                document.getElementById('unmatched-list').innerHTML = data.unmatched.map(s => `<span class="tag" style="background:rgba(255,77,77,0.1); color:#ff4d4d;">${s}</span>`).join('') || "Perfect!";
+                
+                document.getElementById('questions-container').innerHTML = data.questions.map(q => `
+                    <div class="question-item">
+                        <i class="fa-solid fa-chevron-right" style="color:var(--primary); margin-right:8px;"></i>${q}
+                    </div>`).join('');
+                
+                // --- DYNAMIC UPDATES END ---
+
+            } else {
+                flash.innerText = data.error || "Analysis Failed.";
+            }
+        } catch (error) {
+            flash.innerText = "Error connecting to server.";
+        } finally {
+            btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Run AI Analysis';
+        }
+    };
+
+</script>
+</body>
+</html>

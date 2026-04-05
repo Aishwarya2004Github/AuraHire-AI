@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="card">
+    <div class="header-design"><div style="font-size: 45px;">💚</div></div>
+    <div class="content">
+        <h2>Create Profile</h2>
+        <form action="/signup" method="POST">
+            <div class="form-container">
+                {% with msgs = get_flashed_messages() %}{% for m in msgs %}<p class="flash">{{m}}</p>{% endfor %}{% endwith %}
+                <div class="input-group"><input type="text" name="username" placeholder="Username" required></div>
+                <div class="input-group"><input type="text" name="fullname" placeholder="Full Name" required></div>
+                <div class="input-group" style="display:flex; gap:5px;">
+                    <input type="number" name="age" placeholder="Age" style="width:30%" required>
+                    <input type="text" name="org_name" placeholder="University/Company" style="width:70%" required>
+                </div>
+                <div class="input-group"><input type="email" name="email" placeholder="Email" required></div>
+                <div class="input-group">
+                    <input type="password" id="p1" name="password" placeholder="Password" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="toggle('p1', this)"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="p2" name="confirm_password" placeholder="Confirm Password" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="toggle('p2', this)"></i>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Register</button>
+        </form>
+        <p class="footer-text">Member? <a href="/login">Sign In</a></p>
+    </div>
+</div>
+<script>
+function toggle(id, el) {
+    const ipt = document.getElementById(id);
+    ipt.type = ipt.type === "password" ? "text" : "password";
+    el.classList.toggle("fa-eye-slash");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | AuraHire AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #00f2fe; --secondary: #4facfe; --dark-bg: #0f172a; --glass: rgba(255, 255, 255, 0.05); }
+        body { background: #0f172a; color: white; font-family: 'Outfit', sans-serif; margin: 0; }
+        
+        .profile-container { max-width: 600px; margin: 80px auto; background: var(--glass); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); }
+        .profile-header { text-align: center; margin-bottom: 30px; }
+        .profile-pic { width: 100px; height: 100px; background: linear-gradient(45deg, var(--primary), var(--secondary)); borderRadius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 15px; border: 4px solid rgba(255,255,255,0.1); }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; outline: none; transition: 0.3s; box-sizing: border-box; }
+        input:focus { border-color: var(--primary); }
+        
+        .btn-save { width: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border: none; padding: 15px; border-radius: 10px; color: #0f172a; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,242,254,0.3); }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic"><i class="fa-solid fa-user-ninja"></i></div>
+            <h2>Account Settings</h2>
+            <p style="opacity: 0.6; font-size: 14px;">Update your professional identity</p>
+        </div>
+        
+        <form action="/update_profile" method="POST">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" value="{{ session['user'] }}" readonly style="opacity: 0.5; cursor: not-allowed;">
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="fullname" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="rana@example.com" required>
+            </div>
+            <button type="submit" class="btn-save">Update Profile</button>
+        </form>
+        <a href="/dashboard" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+</body>
+</html>

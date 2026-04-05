@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="card">
+    <div class="header-design"><div style="font-size: 45px;">💚</div></div>
+    <div class="content">
+        <h2>Welcome Back!</h2>
+        <form action="/login" method="POST">
+            <div class="form-container">
+                {% with msgs = get_flashed_messages() %}{% for m in msgs %}<p class="flash">{{m}}</p>{% endfor %}{% endwith %}
+                <div class="input-group"><input type="text" name="username" placeholder="Username or Email" required></div>
+                <div class="input-group">
+                    <input type="password" id="log-pass" name="password" placeholder="Password" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="toggle('log-pass', this)"></i>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+        <p class="footer-text">New here? <a href="/signup">Register Now</a></p>
+    </div>
+</div>
+<script>
+function toggle(id, el) {
+    const ipt = document.getElementById(id);
+    ipt.type = ipt.type === "password" ? "text" : "password";
+    el.classList.toggle("fa-eye-slash");
+}
+</script>
+</body>
+</html>

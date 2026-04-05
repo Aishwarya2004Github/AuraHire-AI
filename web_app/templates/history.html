@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraHire AI | Analysis History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #00f2fe; 
+            --secondary: #4facfe; 
+            --accent: #00ff88;
+            --dark-bg: #0f172a; 
+            --glass: rgba(255, 255, 255, 0.05); 
+        }
+
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a); 
+            color: white; 
+            font-family: 'Outfit', sans-serif; 
+            padding: 40px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .history-card { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            background: var(--glass); 
+            backdrop-filter: blur(15px); 
+            padding: 35px; 
+            border-radius: 24px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        h2 { color: var(--primary); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 18px; color: var(--secondary); border-bottom: 2px solid rgba(255,255,255,0.1); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 18px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: #cbd5e1; }
+
+        .score-tag { 
+            padding: 5px 12px; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            background: rgba(0, 255, 136, 0.1); 
+            color: var(--accent); 
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .btn-view { 
+            background: rgba(0, 242, 254, 0.1); 
+            border: 1px solid var(--primary); 
+            color: var(--primary); 
+            padding: 8px 15px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: 0.3s;
+            font-family: 'Outfit';
+        }
+        .btn-view:hover { background: var(--primary); color: #0f172a; }
+
+        .btn-back { color: white; text-decoration: none; opacity: 0.6; display: inline-block; margin-bottom: 20px; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; color: var(--primary); }
+
+        /* Modal Styling */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center; z-index: 2000;
+        }
+        .modal-content {
+            background: #1e293b; padding: 35px; border-radius: 24px;
+            width: 450px; border: 1px solid var(--primary);
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.2);
+            position: relative;
+        }
+        .close-btn { position: absolute; top: 20px; right: 25px; font-size: 30px; cursor: pointer; color: #ff4d4d; transition: 0.3s; }
+        .close-btn:hover { transform: rotate(90deg); }
+        .modal-body p { margin: 15px 0; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; display: flex; justify-content: space-between; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="history-card">
+        <a href="/dashboard" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+        
+        <h2><i class="fa-solid fa-clock-rotate-left"></i> Analysis History</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Resume File</th>
+                    <th>ATS Score</th>
+                    <th>GitHub Rank</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if analyses %}
+                    {% for row in analyses %}
+                    <tr>
+                        <td>{{ row['analysis_date'] }}</td>
+                        <td style="color: white; font-weight: 600;">{{ row['filename'] }}</td>
+                        <td><span class="score-tag">{{ row['ats_score'] }}</span></td>
+                        <td><span style="color: #ff0077; font-weight: 800;">{{ row['git_score'] }}</span></td>
+                        <td>
+                            <button class="btn-view" 
+                                    data-date="{{ row['analysis_date'] }}" 
+                                    data-file="{{ row['filename'] }}" 
+                                    data-ats="{{ row['ats_score'] }}" 
+                                    data-git="{{ row['git_score'] }}"
+                                    onclick="openModal(this)">
+                                <i class="fa-solid fa-eye"></i> View Detail
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding: 60px; opacity: 0.5;">
+                            <i class="fa-solid fa-box-open" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
+                            No analyses found yet.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="detailModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 style="color: var(--primary); margin-top: 0;"><i class="fa-solid fa-chart-line"></i> Analysis Summary</h3>
+            <div class="modal-body">
+                <p><strong>File:</strong> <span id="m-file" style="color:white; text-align: right;"></span></p>
+                <p><strong>Date:</strong> <span id="m-date" style="text-align: right;"></span></p>
+                <p><strong>ATS Score:</strong> <span id="m-ats" style="color:var(--accent); text-align: right;"></span></p>
+                <p><strong>GitHub Score:</strong> <span id="m-git" style="color:#ff0077; text-align: right;"></span></p>
+            </div>
+            <p style="font-size: 12px; opacity: 0.5; margin-top: 20px; border: none;">* Full AI report is stored in your secure vault.</p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(btn) {
+            // Button ke data-attributes se info fetch karna
+            const date = btn.getAttribute('data-date');
+            const file = btn.getAttribute('data-file');
+            const ats = btn.getAttribute('data-ats');
+            const git = btn.getAttribute('data-git');
+
+            // Modal elements update karna
+            document.getElementById('m-date').innerText = date;
+            document.getElementById('m-file').innerText = file;
+            document.getElementById('m-ats').innerText = ats;
+            document.getElementById('m-git').innerText = git;
+
+            // Modal dikhana
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        // Bahar click karne par modal close karna
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

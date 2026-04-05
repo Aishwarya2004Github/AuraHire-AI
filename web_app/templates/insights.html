@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraHire AI | Deep Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --accent: #00ff88;
+            --pink: #ff0077;
+            --bg: #0f172a;
+        }
+
+        body { background: var(--bg); color: white; font-family: 'Outfit', sans-serif; margin: 0; }
+        
+        .insights-container { 
+            max-width: 1200px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 30px; 
+        }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 24px; 
+            padding: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .chart-box { height: 400px; display: flex; justify-content: center; align-items: center; }
+        
+        .advice-box { 
+            border-left: 4px solid var(--primary); 
+            padding: 10px 0 10px 20px;
+            margin-top: 25px; 
+            background: rgba(255,255,255,0.02);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .badge-secure { 
+            color: var(--accent); 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            margin-bottom: 15px; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h2 { margin-top: 0; font-weight: 800; }
+        h4 { margin: 0 0 8px 0; font-size: 14px; text-transform: uppercase; opacity: 0.7; }
+        p { margin: 0; font-size: 15px; line-height: 1.6; opacity: 0.9; }
+
+        @media (max-width: 900px) {
+            .insights-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="insights-container">
+    <div class="glass-card">
+        <span class="badge-secure"><i class="fa-solid fa-shield-halved"></i> Privacy Mode: File Purged from Server</span>
+        <h2 style="color: var(--primary);">AI Strategic Analysis</h2>
+        <p>Based on your Match Score of <strong>{{ data.score }}%</strong>, here is your path to dominance:</p>
+        
+        <div class="advice-box">
+            <h4>💡 Critical Skill Gap</h4>
+            <p>{{ data.roadmap[0] if data.roadmap and data.roadmap|length > 0 else "Your skills align perfectly with the core requirements." }}</p>
+        </div>
+
+        <div class="advice-box" style="border-color: var(--pink);">
+            <h4>🚀 AI Optimization Insight</h4>
+            <p>{{ data.ai_insight if data.ai_insight else "Maintain current formatting; your resume is highly machine-readable." }}</p>
+        </div>
+
+        <div class="advice-box" style="border-color: var(--accent);">
+            <h4>🛠 Technical Edge</h4>
+            <p>Your GitHub Portfolio Rank (<strong>{{ data.github.portfolio_score }}</strong>) indicates high practical authority in your tech stack.</p>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="/dashboard" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h2 style="text-align: center; font-size: 1.2rem; opacity: 0.8;">CANDIDATE VS. JOB BENCHMARK</h2>
+        <div class="chart-box">
+            <canvas id="radarChart"></canvas>
+        </div>
+        <p style="text-align: center; font-size: 12px; opacity: 0.5; margin-top: 20px;">
+            * Benchmark based on Top 1% candidates for this role.
+        </p>
+    </div>
+</div>
+
+<script>
+    // Helper to ensure values are numbers for Chart.js
+    function parseValue(val) {
+        return parseFloat(val) || 0;
+    }
+
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    
+    // Dynamically populated from Flask
+    const candidateData = [
+        parseValue("{{ data.score }}"),
+        parseValue("{{ data.github.portfolio_score }}"),
+        parseValue("{{ data.experience_match }}"), // Ensure this key exists in your 'data' dict
+        parseValue("{{ data.skill_density }}"),   // Ensure this key exists in your 'data' dict
+        parseValue("{{ data.confidence }}")
+    ];
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Technical Fit', 'GitHub Rank', 'Exp Match', 'Skill Density', 'AI Confidence'],
+            datasets: [{
+                label: 'Your Profile',
+                data: candidateData,
+                backgroundColor: 'rgba(0, 242, 254, 0.2)',
+                borderColor: '#00f2fe',
+                borderWidth: 3,
+                pointBackgroundColor: '#00f2fe',
+                pointHoverRadius: 5
+            }, {
+                label: 'Elite Benchmark',
+                data: [90, 85, 80, 95, 90], // Fixed elite standard
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+                borderWidth: 1,
+                borderDash: [5, 5],
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255,255,255,0.1)' },
+                    grid: { color: 'rgba(255,255,255,0.1)' },
+                    pointLabels: { 
+                        color: '#fff',
+                        font: { size: 11, weight: '600' }
+                    },
+                    ticks: { display: false, stepSize: 20 },
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            },
+            plugins: { 
+                legend: { 
+                    position: 'bottom',
+                    labels: { color: '#fff', padding: 20, font: { size: 12 } } 
+                } 
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
